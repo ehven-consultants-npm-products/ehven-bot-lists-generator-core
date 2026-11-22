@@ -8,6 +8,14 @@ const now = Date.parse('2026-11-20T00:00:00Z');
 const disclosure = () => ({contact: 'mailto:security@example.org', expires: '2027-01-01T00:00:00Z', canonical: 'https://example.org/.well-known/security.txt'});
 const rejects = (fn, code, field) => assert.throws(fn, error => error instanceof BotListsError && error.code === code && (!field || error.field === field));
 
+test('exported diagnostics preserve the documented constructor contract', () => {
+  const error = new BotListsError('INVALID_INPUT', 'site', 'expected HTTPS');
+  assert.ok(error instanceof TypeError);
+  assert.equal(error.code, 'INVALID_INPUT');
+  assert.equal(error.field, 'site');
+  assert.equal(error.message, 'site: expected HTTPS');
+});
+
 test('approved inventory is normalized, copied, deeply frozen and independently instantiated', () => {
   const input = base(), publication = definePublication(input);
   input.pages[0].title = 'Changed'; input.privateRoots.push('/elsewhere');

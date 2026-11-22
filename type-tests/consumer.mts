@@ -14,8 +14,11 @@ const disclosure: DisclosureInput = {contact: 'mailto:security@example.org', exp
 const security: string = renderSecurity(disclosure, {now: 1});
 const rss: RSSOptions = createRSSOptions(publication, {language: 'he-IL', now: () => 1})();
 const filter: boolean = createSitemapFilter(publication)('https://example.org/');
+const diagnostic = new BotListsError('INVALID_INPUT', 'site', 'expected HTTPS');
+// @ts-expect-error the exported constructor requires code, field and message
+new BotListsError('message');
 function diagnostics(error: unknown): string { return error instanceof BotListsError ? `${error.code}:${error.field}` : 'other'; }
-void [discovery, robots, entries, path, credits, security, rss, filter, diagnostics];
+void [discovery, robots, entries, path, credits, security, rss, filter, diagnostics, diagnostic];
 
 // @ts-expect-error inventories must be constructed by definePublication
 const forged: Publication = {site: input.site, title: input.title, description: input.description, pages: [], privateRoots: []};
