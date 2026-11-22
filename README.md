@@ -108,6 +108,7 @@ everything else. Your application serves the generated strings as UTF-8
   under `/.well-known/security.txt`. Redirect a legacy `/security.txt` route to it
   so the retrieval URL agrees with the declared canonical URL.
 - Failures throw `BotListsError`, a `TypeError` with `code` and `field`.
+  Its public constructor is `new BotListsError(code, field, message)`.
   Codes include `INVALID_INPUT`, `INVALID_TEXT`, `INVALID_URL`, `INVALID_PATH`,
   `PROTECTED_PATH`, `DUPLICATE_PATH`, `DRAFT_PAGE`, `INVALID_TIME`,
   `INVALID_LANGUAGE` and `INVALID_PUBLICATION`. Messages identify fields without
