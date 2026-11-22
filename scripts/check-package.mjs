@@ -1,0 +1,45 @@
+import assert from 'node:assert/strict';
+import {mkdtempSync, readFileSync, writeFileSync, existsSync, readdirSync, rmSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {tmpdir} from 'node:os';
+import {join, resolve, dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const temporary = mkdtempSync(join(tmpdir(), 'bot-lists-package-'));
+const run = (command, args, cwd = root) => execFileSync(command, args, {cwd, encoding: 'utf8', timeout: 30000, stdio: ['ignore', 'pipe', 'pipe']});
+try {
+  const manifest = JSON.parse(readFileSync(join(root, 'package.json')));
+  assert.equal(manifest.name, '@ehven/bot-lists-generator-core');
+  assert.equal(Object.keys(manifest.dependencies ?? {}).length, 0);
+  for (const hook of ['preinstall', 'install', 'postinstall', 'prepare']) assert.equal(manifest.scripts[hook], undefined);
+  for (const file of readdirSync(join(root, 'src')).filter(file => file.endsWith('.mjs'))) run(process.execPath, ['--check', join(root, 'src', file)]);
+  for (const entry of Object.values(manifest.exports)) for (const path of Object.values(entry)) assert.ok(existsSync(join(root, path)), path);
+  const [packed] = JSON.parse(run('npm', ['pack', '--json', '--ignore-scripts', '--pack-destination', temporary]));
+  const expected = ['package.json', 'README.md', 'LICENSE', ...readdirSync(join(root, 'src')).map(file => `src/${file}`)].sort();
+  assert.deepEqual(packed.files.map(item => item.path).sort(), expected);
+  writeFileSync(join(temporary, 'package.json'), JSON.stringify({name: 'bot-lists-consumer', version: '1.0.0', private: true, type: 'module'}));
+  run('npm', ['install', '--offline', '--ignore-scripts', '--no-audit', '--no-fund', join(temporary, packed.filename)], temporary);
+  const script = `import assert from 'node:assert/strict';
+import * as core from '@ehven/bot-lists-generator-core';
+import * as publication from '@ehven/bot-lists-generator-core/publication';
+import {renderHumans} from '@ehven/bot-lists-generator-core/metadata';
+import {createSitemapFilter} from '@ehven/bot-lists-generator-core/integrations';
+assert.equal(Object.keys(core).length, 11);
+assert.equal(Object.keys(publication).length, 6);
+const p=core.definePublication({site:'https://example.org',title:'Example',description:'Public site',pages:[{path:'/',title:'Home',description:'Home'}]});
+assert.ok(core.renderDiscovery(p).includes('https://example.org/'));
+assert.equal(createSitemapFilter(p)('https://example.org/'),true);
+assert.match(renderHumans({owner:'Example',site:p.site}), /Owner: Example/);
+assert.throws(()=>core.renderHumans({owner:'Example',site:'https://u:p@example.org/'}),e=>e.code==='INVALID_URL');
+assert.throws(()=>core.definePublication({site:'https://example.org',title:'Bad\\u0000',description:'D',pages:[{path:'/',title:'H',description:'H'}]}),e=>e.code==='INVALID_TEXT');
+assert.throws(()=>core.definePublication({site:'https://example.org',title:'T',description:'D',pages:[{path:'/',title:'H',description:'H',publishedAt:'2026-02-31T00:00:00Z'}]}),e=>e.code==='INVALID_TIME');
+assert.throws(()=>core.renderSecurity({contact:'mailto:security@example.org',expires:'2027-01-01T00:00:00',canonical:'https://example.org/.well-known/security.txt'},{now:Date.parse('2026-11-20T00:00:00Z')}),e=>e.code==='INVALID_TIME');
+const protectedAssets=core.definePublication({site:'https://example.org',title:'T',description:'D',privateRoots:['/assets/private'],pages:[{path:'/',title:'H',description:'H'}]});
+assert.throws(()=>core.renderRobots(protectedAssets,{assetPaths:['/assets/']}),e=>e.code==='PROTECTED_PATH');
+console.log('Packed root/subpath imports and defect regressions passed.');`;
+  writeFileSync(join(temporary, 'consumer.mjs'), script);
+  const consumer = run(process.execPath, ['consumer.mjs'], temporary);
+  console.log(consumer.trim());
+  console.log(JSON.stringify({name: packed.name, version: packed.version, size: packed.size, unpackedSize: packed.unpackedSize, integrity: packed.integrity, files: expected.length}));
+} finally { rmSync(temporary, {recursive: true, force: true}); }
