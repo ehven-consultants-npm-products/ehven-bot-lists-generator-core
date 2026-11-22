@@ -3,7 +3,7 @@ import {mkdtempSync, readFileSync, writeFileSync, existsSync, readdirSync, rmSyn
 import {execFileSync} from 'node:child_process';
 import {tmpdir} from 'node:os';
 import {join, resolve, dirname} from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {fileURLToPath, pathToFileURL} from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const temporary = mkdtempSync(join(tmpdir(), 'bot-lists-package-'));
@@ -41,5 +41,17 @@ console.log('Packed root/subpath imports and defect regressions passed.');`;
   writeFileSync(join(temporary, 'consumer.mjs'), script);
   const consumer = run(process.execPath, ['consumer.mjs'], temporary);
   console.log(consumer.trim());
+  writeFileSync(join(temporary, 'types.mts'), readFileSync(join(root, 'type-tests/consumer.mts')));
+  run(process.execPath, [join(root, 'node_modules/typescript/lib/tsc.js'), '--noEmit', '--strict', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2022', 'types.mts'], temporary);
+  const rssScript = `import assert from 'node:assert/strict';
+import rss from ${JSON.stringify(pathToFileURL(join(root, 'node_modules/@astrojs/rss/dist/index.js')).href)};
+import {definePublication,createRSSOptions} from '@ehven/bot-lists-generator-core';
+const p=definePublication({site:'https://example.org',title:'A & B',description:'Public site',pages:[{path:'/article/',title:'שלום & example',description:'D',kind:'article',publishedAt:'2026-11-22T00:00:00Z'}]});
+const response=await rss(createRSSOptions(p,{language:'he',now:()=>Date.parse('2026-11-22T00:00:00Z')})());
+assert.equal(response.status,200);
+const xml=await response.text();assert.ok(xml.includes('שלום &amp; example'));assert.ok(xml.includes('https://example.org/article/'));`;
+  writeFileSync(join(temporary, 'rss.mjs'), rssScript);
+  run(process.execPath, ['rss.mjs'], temporary);
+  console.log('Packed declarations and official RSS serialization passed.');
   console.log(JSON.stringify({name: packed.name, version: packed.version, size: packed.size, unpackedSize: packed.unpackedSize, integrity: packed.integrity, files: expected.length}));
 } finally { rmSync(temporary, {recursive: true, force: true}); }

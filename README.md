@@ -6,8 +6,8 @@ dependencies. This development preview is not yet published on npm.
 
 ## Try the preview
 
-Prerequisite: Node.js 24.22.3 or later. The current verified runtime is
-24.22.3 on Linux; additional runtime/platform coverage is pending.
+Prerequisite: Node.js 24.19.0 or later. CI exercises 24.19.0 and 24.22.3 on Linux;
+other runtime/platform coverage is not claimed.
 
 From a checkout, run `npm pack --ignore-scripts`, then install the resulting
 tarball in your consuming project using `npm install /absolute/path/to/the.tgz`.
@@ -50,8 +50,8 @@ everything else. Your application serves the generated strings as UTF-8
 
 - ESM named exports are available at the root and at `/publication`, `/metadata`
   and `/integrations`. CommonJS, a CLI and automatic configuration loading are
-  outside this preview. Type declarations accompany the exports; compiler
-  compatibility still needs release verification.
+  outside this preview. TypeScript 6.0.3 verifies the declarations through both
+  source and clean packed-package consumer fixtures.
 - Pass explicit configuration objects. No environment variables, configuration
   precedence or secret providers are consulted. Keep reusable generation logic
   in the package and site identity/approval choices in your application.
