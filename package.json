@@ -27,16 +27,26 @@
     }
   },
   "files": [
-    "src/*.mjs",
-    "src/*.d.mts",
+    "CHANGELOG.md",
+    "LICENSE",
     "README.md",
-    "LICENSE"
+    "SECURITY.md",
+    "src/index.d.mts",
+    "src/index.mjs",
+    "src/integrations.d.mts",
+    "src/integrations.mjs",
+    "src/metadata.d.mts",
+    "src/metadata.mjs",
+    "src/publication.d.mts",
+    "src/publication.mjs",
+    "src/validation.mjs"
   ],
   "sideEffects": false,
   "scripts": {
     "test": "node --test",
     "check:types": "tsc --noEmit --strict --module NodeNext --moduleResolution NodeNext --target ES2022 type-tests/consumer.mts",
-    "check": "node --test && npm run check:types && node scripts/check-package.mjs"
+    "check": "node --test && npm run check:types && node scripts/check-package.mjs",
+    "release:prepare": "node scripts/release.mjs prepare"
   },
   "devDependencies": {
     "@astrojs/rss": "4.0.19",
@@ -45,5 +55,19 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ehven-consultants-npm-products/ehven-bot-lists-generator-core.git"
-  }
+  },
+  "author": "Gilad Ehven",
+  "homepage": "https://github.com/ehven-consultants-npm-products/ehven-bot-lists-generator-core#readme",
+  "bugs": {
+    "url": "https://github.com/ehven-consultants-npm-products/ehven-bot-lists-generator-core/issues"
+  },
+  "keywords": [
+    "robots.txt",
+    "llms.txt",
+    "security.txt",
+    "humans.txt",
+    "rss",
+    "sitemap",
+    "publication"
+  ]
 }

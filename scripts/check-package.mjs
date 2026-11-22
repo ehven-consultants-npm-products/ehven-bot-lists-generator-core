@@ -16,7 +16,7 @@ try {
   for (const file of readdirSync(join(root, 'src')).filter(file => file.endsWith('.mjs'))) run(process.execPath, ['--check', join(root, 'src', file)]);
   for (const entry of Object.values(manifest.exports)) for (const path of Object.values(entry)) assert.ok(existsSync(join(root, path)), path);
   const [packed] = JSON.parse(run('npm', ['pack', '--json', '--ignore-scripts', '--pack-destination', temporary]));
-  const expected = ['package.json', 'README.md', 'LICENSE', ...readdirSync(join(root, 'src')).map(file => `src/${file}`)].sort();
+  const expected = ['package.json', 'README.md', 'LICENSE', 'CHANGELOG.md', 'SECURITY.md', ...readdirSync(join(root, 'src')).map(file => `src/${file}`)].sort();
   assert.deepEqual(packed.files.map(item => item.path).sort(), expected);
   writeFileSync(join(temporary, 'package.json'), JSON.stringify({name: 'bot-lists-consumer', version: '1.0.0', private: true, type: 'module'}));
   run('npm', ['install', '--offline', '--ignore-scripts', '--no-audit', '--no-fund', join(temporary, packed.filename)], temporary);

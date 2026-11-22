@@ -133,5 +133,27 @@ bot identity databases, individual AI-provider policies and publishing/hosting
 automation are separate responsibilities. Wider URL contracts and additional
 formats will require explicit compatibility decisions.
 
-MIT licensed. This is an initial development preview; support commitments and
-public reporting destinations will be finalized before a public release.
+## Status and support
+
+This is an unpublished development preview. The intended first stable version is
+1.0.0 after validation. Stable 1.x follows SemVer: breaking contract changes require
+a major version, compatible additions a minor version, and compatible fixes a patch.
+Only the latest stable 1.x is intended to receive fixes. Development is maintained
+by Gilad Ehven, with no guaranteed response time or commercial support service level.
+
+Once this repository is public, use [GitHub Issues](https://github.com/ehven-consultants-npm-products/ehven-bot-lists-generator-core/issues)
+for ordinary bugs and feature requests. Include the exact package/Node versions,
+serializer or host versions, a small synthetic inventory, expected/actual output and
+reproduction steps. Review existing issues first. Private preview users should use
+their existing project channel; the repository is not yet anonymously accessible.
+
+Report suspected vulnerabilities privately to [security@ehven.com](mailto:security@ehven.com),
+monitored by Gilad Ehven. Do not include credentials or private content. Confirmed
+security fixes use a new version and a coordinated notice when appropriate. Review
+the notice, upgrade and regenerate output; a compromised prior version is not a
+safe rollback merely because it is older. Callers retain responsibility for content
+approval, access control and hosting.
+
+MIT licensed. The distributed SECURITY.md contains the reporting policy, and
+CHANGELOG.md identifies release changes. No funding or paid support endpoint is
+required to use the package.
