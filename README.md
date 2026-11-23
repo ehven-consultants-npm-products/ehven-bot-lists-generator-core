@@ -141,11 +141,11 @@ a major version, compatible additions a minor version, and compatible fixes a pa
 Only the latest stable 1.x is intended to receive fixes. Development is maintained
 by Gilad Ehven, with no guaranteed response time or commercial support service level.
 
-Once this repository is public, use [GitHub Issues](https://github.com/ehven-consultants-npm-products/ehven-bot-lists-generator-core/issues)
+Use [GitHub Issues](https://github.com/ehven-consultants-npm-products/ehven-bot-lists-generator-core/issues)
 for ordinary bugs and feature requests. Include the exact package/Node versions,
 serializer or host versions, a small synthetic inventory, expected/actual output and
-reproduction steps. Review existing issues first. Private preview users should use
-their existing project channel; the repository is not yet anonymously accessible.
+reproduction steps. Review existing issues first. Source and issue reporting are
+public; the npm package remains an unpublished development preview.
 
 Report suspected vulnerabilities privately to [security@ehven.com](mailto:security@ehven.com),
 monitored by Gilad Ehven. Do not include credentials or private content. Confirmed
