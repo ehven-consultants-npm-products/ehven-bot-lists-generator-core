@@ -22,7 +22,7 @@ function fixture(t, stable = true) {
     mkdirSync(dirname(target), {recursive: true});
     cpSync(join(root, path), target);
   }
-  if (stable) Object.assign(pkg, {version: '1.0.0', private: false});
+  Object.assign(pkg, {version: stable ? '1.0.0' : '0.1.0-dev.0', private: !stable});
   writeFileSync(join(cwd, 'package.json'), JSON.stringify(pkg));
   const invoke = (operation, env = process.env) => spawnSync(process.execPath, [script, operation], {
     cwd, env, encoding: 'utf8', timeout: 30000,
