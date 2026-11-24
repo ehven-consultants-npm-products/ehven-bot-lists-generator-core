@@ -15,7 +15,12 @@ try {
   for (const hook of ['preinstall', 'install', 'postinstall', 'prepare']) assert.equal(manifest.scripts[hook], undefined);
   for (const file of readdirSync(join(root, 'src')).filter(file => file.endsWith('.mjs'))) run(process.execPath, ['--check', join(root, 'src', file)]);
   for (const entry of Object.values(manifest.exports)) for (const path of Object.values(entry)) assert.ok(existsSync(join(root, path)), path);
-  const [packed] = JSON.parse(run('npm', ['pack', '--json', '--ignore-scripts', '--pack-destination', temporary]));
+  const packResult = JSON.parse(run('npm', ['pack', '--json', '--ignore-scripts', '--pack-destination', temporary]));
+  const packages = Array.isArray(packResult) ? packResult : Object.values(packResult);
+  assert.equal(packages.length, 1);
+  const [packed] = packages;
+  assert.equal(packed.name, manifest.name);
+  assert.equal(packed.version, manifest.version);
   const expected = ['package.json', 'README.md', 'LICENSE', 'CHANGELOG.md', 'SECURITY.md', ...readdirSync(join(root, 'src')).map(file => `src/${file}`)].sort();
   assert.deepEqual(packed.files.map(item => item.path).sort(), expected);
   writeFileSync(join(temporary, 'package.json'), JSON.stringify({name: 'bot-lists-consumer', version: '1.0.0', private: true, type: 'module'}));

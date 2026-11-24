@@ -1,8 +1,8 @@
 {
   "name": "@ehven/bot-lists-generator-core",
-  "version": "0.1.0-dev.0",
+  "version": "1.0.0",
   "description": "Explicit public inventories and portable crawler, discovery, feed and disclosure generators.",
-  "private": true,
+  "private": false,
   "type": "module",
   "license": "MIT",
   "engines": {

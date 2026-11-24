@@ -2,16 +2,20 @@
 
 Explicit public inventories and portable generators for robots.txt, llms.txt,
 RSS entries, sitemap filtering, humans.txt and security.txt. Zero runtime
-dependencies. This development preview is not yet published on npm.
+dependencies.
 
-## Try the preview
+## Install
 
 Prerequisite: Node.js 24.19.0 or later. CI exercises 24.19.0 and 24.22.3 on Linux;
 other runtime/platform coverage is not claimed.
 
-From a checkout, run `npm pack --ignore-scripts`, then install the resulting
-tarball in your consuming project using `npm install /absolute/path/to/the.tgz`.
-There are no install hooks, downloads or configuration files to discover.
+```sh
+npm install @ehven/bot-lists-generator-core
+```
+
+There are no install hooks or automatic configuration files.
+
+## Generate discovery and robots.txt
 
 Create `config/packages/npm/bot-lists-generator-core/publication.mjs` in your project:
 
@@ -50,7 +54,7 @@ everything else. Your application serves the generated strings as UTF-8
 
 - ESM named exports are available at the root and at `/publication`, `/metadata`
   and `/integrations`. CommonJS, a CLI and automatic configuration loading are
-  outside this preview. TypeScript 6.0.3 verifies the declarations through both
+  outside the supported interface. TypeScript 6.0.3 verifies the declarations through both
   source and clean packed-package consumer fixtures.
 - Pass explicit configuration objects. No environment variables, configuration
   precedence or secret providers are consulted. Keep reusable generation logic
@@ -135,8 +139,7 @@ formats will require explicit compatibility decisions.
 
 ## Status and support
 
-This is an unpublished development preview. The intended first stable version is
-1.0.0 after validation. Stable 1.x follows SemVer: breaking contract changes require
+Stable 1.x follows SemVer: breaking contract changes require
 a major version, compatible additions a minor version, and compatible fixes a patch.
 Only the latest stable 1.x is intended to receive fixes. Development is maintained
 by Gilad Ehven, with no guaranteed response time or commercial support service level.
@@ -144,8 +147,7 @@ by Gilad Ehven, with no guaranteed response time or commercial support service l
 Use [GitHub Issues](https://github.com/ehven-consultants-npm-products/ehven-bot-lists-generator-core/issues)
 for ordinary bugs and feature requests. Include the exact package/Node versions,
 serializer or host versions, a small synthetic inventory, expected/actual output and
-reproduction steps. Review existing issues first. Source and issue reporting are
-public; the npm package remains an unpublished development preview.
+reproduction steps. Review existing issues first.
 
 Report suspected vulnerabilities privately to [security@ehven.com](mailto:security@ehven.com),
 monitored by Gilad Ehven. Do not include credentials or private content. Confirmed

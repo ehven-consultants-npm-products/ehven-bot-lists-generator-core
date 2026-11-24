@@ -6,8 +6,7 @@ Include the affected version, a minimal reproduction, impact and relevant enviro
 Send synthetic examples; omit credentials and private site content. Do not post a
 suspected vulnerability in a public issue before coordination.
 
-This package is an unpublished development preview. After the first stable release,
-security fixes will target the latest stable 1.x release; upgrade to the latest patch.
+Security fixes target the latest stable 1.x release. Upgrade to the latest patch.
 No response-time or commercial support service level is promised.
 
 The package validates explicit public inventories and generates text. It does not
